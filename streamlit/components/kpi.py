@@ -46,17 +46,17 @@ def render_kpi(latest, prev):
     st.caption("🛠️ Trend Indicators (SMA)")
     c1, c2, c3 = st.columns(3)
 
+    sma1 = latest.get("sma_1_day")
     sma5 = latest.get("sma_5_day")
-    sma20 = latest.get("sma_20_day")
 
     # Logic Sederhana untuk Trend
     trend = "Neutral"
-    if sma5 and sma20:
-        if sma5 > sma20:
+    if sma1 and sma5:
+        if sma1 > sma5:
             trend = "Bullish 📈"
-        elif sma5 < sma20:
+        elif sma1 < sma5:
             trend = "Bearish 📉"
 
-    c1.metric("SMA 5-Day", f"Rp {safe_format(sma5, '{:,.0f}')}")
-    c2.metric("SMA 20-Day", f"Rp {safe_format(sma20, '{:,.0f}')}")
+    c1.metric("SMA 1-Day", f"Rp {safe_format(sma1, '{:,.0f}')}")
+    c2.metric("SMA 5-Day", f"Rp {safe_format(sma5, '{:,.0f}')}")
     c3.metric("Signal", trend)

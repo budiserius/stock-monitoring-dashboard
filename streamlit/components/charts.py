@@ -8,23 +8,20 @@ def price_chart(df):
         x="trade_date",
         y=["close_daily", "sma_5_day", "sma_20_day"]
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 def volume_chart(df):
     fig = px.bar(df, x="trade_date", y="total_volume_daily")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 import plotly.graph_objects as go
 import streamlit as st
 
 def intraday_price_chart(df, interval="1m"):
-    # Copy dataframe agar tidak merusak data asli
     pdf = df.copy()
     pdf['price_timestamp'] = pd.to_datetime(pdf['price_timestamp'])
     pdf = pdf.set_index('price_timestamp')
 
-    # Mapping interval Streamlit ke Pandas Offset Alias
-    # 1m -> 1min, 5m -> 5min, 1h -> 1H, 1d -> 1D, 1M -> 1ME (Month End)
     resample_map = {
         "1m": "1min",
         "5m": "5min",
@@ -35,7 +32,6 @@ def intraday_price_chart(df, interval="1m"):
     
     rule = resample_map.get(interval, "1min")
 
-    # Resampling Logic (OHLC)
     resampled_df = pdf.resample(rule).agg({
         'open_price': 'first',
         'high_price': 'max',
@@ -44,7 +40,6 @@ def intraday_price_chart(df, interval="1m"):
         'volume': 'sum'
     }).dropna()
 
-    # Create Chart
     fig = go.Figure(data=[go.Candlestick(
         x=resampled_df.index,
         open=resampled_df['open_price'],
@@ -61,4 +56,4 @@ def intraday_price_chart(df, interval="1m"):
         height=450
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')

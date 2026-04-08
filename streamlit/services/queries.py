@@ -1,34 +1,65 @@
 import pandas as pd
-from services.database import get_connection
 import streamlit as st
+from sqlalchemy import text
+from services.database import engine # Pastikan ini mengembalikan sqlalchemy engine
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def get_gold_data():
-    conn = get_connection()
     query = """
-        SELECT ticker, trade_date, open_daily, high_daily, low_daily, close_daily, total_volume_daily, sma_5_day, sma_20_day
+        SELECT ticker, trade_date, open_daily, high_daily, low_daily, 
+               close_daily, total_volume_daily, sma_1_day, sma_5_day
         FROM gold.mvw_daily_stock_trends
         ORDER BY trade_date;
     """
-    return pd.read_sql(query, conn)
+    try:
+        with engine.connect() as conn:
+            return pd.read_sql(text(query), conn)
+    except Exception as e:
+        st.error(f"Error Gold Layer: {e}")
+        return pd.DataFrame()
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def get_silver_data(ticker: str):
-    conn = get_connection()
     query = """
-        SELECT 
-            ticker,
-            price_timestamp,
-            open_price,
-            close_price,
-            high_price,
-            low_price,
-            volume
+        SELECT ticker, price_timestamp, open_price, close_price, 
+               high_price, low_price, volume
         FROM silver.stock_prices
-        WHERE ticker = %s
+        WHERE ticker = :ticker
         ORDER BY price_timestamp;
     """
-    df = pd.read_sql(query, conn, params=(ticker,))
-    df["price_timestamp"] = pd.to_datetime(df["price_timestamp"], utc=True)
-    df["price_timestamp"] = df["price_timestamp"].dt.tz_convert("Asia/Jakarta")
-    return df
+    try:
+        with engine.connect() as conn:
+            # Gunakan parameter mapping :ticker untuk keamanan
+            df = pd.read_sql(text(query), conn, params={"ticker": ticker})
+            
+        if not df.empty:
+            df["price_timestamp"] = pd.to_datetime(df["price_timestamp"], utc=True)
+            df["price_timestamp"] = df["price_timestamp"].dt.tz_convert("Asia/Jakarta")
+        return df
+    except Exception as e:
+        st.error(f"Error Silver Layer: {e}")
+        return pd.DataFrame()
+    
+@st.cache_data(ttl=10) # Cache sangat singkat (10 detik) agar monitoring terasa real-time
+def get_pipeline_logs():
+    query = """
+        SELECT 
+            dag_id, 
+            task_id, 
+            status, 
+            execution_date, 
+            start_time, 
+            end_time, 
+            duration_seconds, 
+            rows_processed, 
+            error_message
+        FROM management.airflow_task_logs
+        ORDER BY start_time DESC
+        LIMIT 100;
+    """
+    try:
+        with engine.connect() as conn:
+            return pd.read_sql(text(query), conn)
+    except Exception as e:
+        st.error(f"Error Pipeline Logs: {e}")
+        return pd.DataFrame()
