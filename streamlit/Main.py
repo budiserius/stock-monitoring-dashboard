@@ -27,9 +27,9 @@ with st.sidebar:
     st.subheader("About")
     st.write("🚀 **Developer:** Muhammad Budi Setiawan")
     st.write("🛠️ **Stack:** Airflow, PostgreSQL, Docker, Streamlit")
-    st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mbudis23)")
-    st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/muhammad-budi-setiawan)")
+    st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/budiserius)")
+    st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mbudis/)")
     st.caption("Developed as a Data Engineering Portfolio Project.")
 
 st.divider()
-st.caption("© 2026 IDX Medallion Pipeline | Muhammad Budi Setiawan")
+st.caption("© 2026 | Muhammad Budi Setiawan")

@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, text
 from datetime import datetime
 
 # --- KONFIGURASI ---
-DB_URL = "postgresql+psycopg2://postgres:12345678@localhost:5432/de-stocks"
+DB_URL = "postgresql+psycopg2://postgres:12345678@103.67.78.244:5432/stock_monitoring"
 LIST_SAHAM = ['UNTR.JK', 'MTDL.JK', 'ASII.JK', 'BBCA.JK', 'TLKM.JK']
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

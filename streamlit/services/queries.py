@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 from sqlalchemy import text
-from services.database import engine # Pastikan ini mengembalikan sqlalchemy engine
+from services.database import engine
 
 @st.cache_data(ttl=60)
 def get_gold_data():
@@ -40,7 +40,7 @@ def get_silver_data(ticker: str):
         st.error(f"Error Silver Layer: {e}")
         return pd.DataFrame()
     
-@st.cache_data(ttl=10) # Cache sangat singkat (10 detik) agar monitoring terasa real-time
+@st.cache_data(ttl=10)
 def get_pipeline_logs():
     query = """
         SELECT 
