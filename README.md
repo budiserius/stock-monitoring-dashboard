@@ -2,7 +2,7 @@
 
 End to End Data Pipeline for Stock Monitoring
 
-Demo: [stock-monitoring.project-capstone.my.id](stock-monitoring.project-capstone.my.id)
+Demo: [https://stock-monitoring.project-capstone.my.id](https://stock-monitoring.project-capstone.my.id)
 
 # Overview
 
@@ -53,6 +53,7 @@ cd stock-monitoring-dashboard
 ```
 
 2. **Setup Database**:
+
    Run SQL Script in folder `postgresql/schema.sql`
 
 3. **Change Environment**:
